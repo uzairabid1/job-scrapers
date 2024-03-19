@@ -38,24 +38,27 @@ def appendProduct(sheet_name, data):
     credentials = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
 
     gc = gspread.authorize(credentials)
-
+    headers = ["Company Name","Job Title","Job Link","Date Posted","Found On","Description","Salary Range","Location","Team/Department"]
     try:
         sheet = gc.open(sheet_name).sheet1
         if sheet.row_count == 0:
-            headers = ["Company","Job Title","Job Link","Date Posted","Found On","Description","Salary Range","Location","Team'/Department"]
+            headers = ["Company Name","Job Title","Job Link","Date Posted","Found On","Description","Salary Range","Location","Team/Department"]
             sheet.append_row(headers)
     except Exception as e:
         print(f"An error occurred while opening the Google Sheets document: {str(e)}")
         return False
 
     try:
-        df = pd.DataFrame([data])
-        sheet.append_row(df.values.tolist()[0])
+        # Convert salary range tuple to string
+        salary_range = '-'.join(map(str, data.get('Salary Range', ('', ''))))
+        data['Salary Range'] = salary_range
+
+        # Convert data dictionary to list
+        data_list = [data.get(key, '') for key in headers]
+        sheet.append_row(data_list)
     except Exception as e:
         print(f"An error occurred while appending data to the Google Sheets document: {str(e)}")
         return False
-
-    return True
 
 driver.get("https://about.gitlab.com/jobs/all-jobs/")
 
