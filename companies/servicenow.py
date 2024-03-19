@@ -27,7 +27,7 @@ options = webdriver.ChromeOptions()
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument("--no-sandbox")
 options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-options.add_argument("--headless=new")
+# options.add_argument("--headless=new")
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
 
@@ -70,7 +70,7 @@ def get_filtered_links(driver):
     filtered_links = []
 
     pg_idx = 2
-    while pg_idx <= 30:            
+    while pg_idx <= 48:            
         links_xp = driver.find_elements(By.XPATH, "//p[@class='job-title']/a")
         for link in links_xp:
             href = link.get_attribute('aria-label').lower()

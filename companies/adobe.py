@@ -74,31 +74,28 @@ driver.get("https://careers.adobe.com/us/en/search-results?qcountry=United%20Sta
 time.sleep(4)
 
 def get_filtered_links(driver):
-
-    
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
-    filtered_links = []
+    filtered_links = set()  
 
     while True:
         links_xp = driver.find_elements(By.XPATH, "//a[@ph-tevent='job_click']")
-        print(len(links_xp))
         for link in links_xp:
             href = link.get_attribute('href').lower()
-            print(href)
             if any(keyword in href for keyword in keywords):
                 data = {
                     "Job_Title": link.text.strip(),
                     "Job_Link": link.get_attribute('href')
                 }
-                filtered_links.append(data)
+                filtered_links.add((data["Job_Title"], data["Job_Link"]))
+
         try:
-            next_button = driver.find_element(By.XPATH,"//a[@aria-label='View next page']")
+            next_button = driver.find_element(By.XPATH, "//a[@aria-label='View next page']")
             next_button.click()
             time.sleep(2)
         except:
             break
 
-    return filtered_links
+    return [{"Job_Title": title, "Job_Link": link} for title, link in filtered_links]
 
 
 def extract_inner(links_data):

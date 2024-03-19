@@ -131,6 +131,10 @@ def extract_inner(links_data):
                 date_posted = link_data['Date_Posted']
             except:
                 date_posted = ''
+            try:
+                job_link = job_link.split("&page")[0]
+            except:
+                job_link = job_link
 
             data = {
                 "Company Name": company_name,
