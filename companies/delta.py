@@ -84,29 +84,26 @@ def get_filtered_links(driver):
 
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
-    p_idx = 1
-    while p_idx < 12:            
-        links_xp = driver.find_elements(By.CSS_SELECTOR, "div.list__item__text__title>a")
-
+    
+    while True:            
+        links_xp = driver.find_elements(By.XPATH, "//div[@class='list__item__text__title']/a")
         for link in links_xp:
-            href = link.get_attribute('href').lower()  
-            title = link.text.strip()     
+            href = link.get_attribute('href').lower()     
             if any(keyword in href for keyword in keywords):
                 data = {
-                    "Job_Title": title,
+                    "Job_Title": link.text.strip(),
                     "Job_Link": link.get_attribute('href')
                 }
                 filtered_links.append(data)
-        p_idx += 1
-        if p_idx == 11:
-            return filtered_links 
         try:
             next_button = driver.find_element(By.CSS_SELECTOR,"a.pagination__item.paginationNextLink")
             next_button.click()
-            time.sleep(2)
+            
         except:
             print('looo')
-               
+            break
+        time.sleep(4)
+    return filtered_links           
 
 
 def extract_inner(links_data):
@@ -182,6 +179,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

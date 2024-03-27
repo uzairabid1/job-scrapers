@@ -75,7 +75,7 @@ def extract_salary_range(text):
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
+    keywords = ["head", "chief", "president", "vice president","vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
 
     while True:            
@@ -177,6 +177,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

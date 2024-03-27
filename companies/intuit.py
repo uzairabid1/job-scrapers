@@ -79,12 +79,18 @@ def extract_salary_range(text):
     else:
         return ''
 
-
+def close_dropdown_if_present(driver):
+    try:
+        close_button = driver.find_element(By.XPATH, "//button[@aria-label='Close']")
+        close_button.click()
+        time.sleep(2)  
+    except:
+        pass
 def get_filtered_links(driver):
 
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
-    while True:            
+    for page_index in range(1, 20):             
         links_xp = driver.find_elements(By.XPATH, "//a[@class='sr-item']")
         for link in links_xp:
             href = link.get_attribute('href').lower()  
@@ -95,13 +101,15 @@ def get_filtered_links(driver):
                     "Job_Link": link.get_attribute('href')
                 }
                 filtered_links.append(data)
+        close_dropdown_if_present(driver) 
         try:
             next_button = driver.find_element(By.CSS_SELECTOR,"a.next")
             next_button.click()
-            time.sleep(2)
+            
         except:
-            print('looo')
+            print(f"No more next buttons on page {page_index}")
             break
+        time.sleep(4)
 
     return filtered_links
 

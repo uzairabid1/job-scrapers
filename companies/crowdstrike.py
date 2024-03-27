@@ -63,15 +63,15 @@ driver.get("https://crowdstrike.wd5.myworkdayjobs.com/crowdstrikecareers?locatio
 
 time.sleep(4)
 
-def extract_salary_range(text):
-    pattern = r'\$([\d,]+) to \$([\d,]+)'
-    matches = re.search(pattern, text)
+def extract_salary_range(description):
+    pattern = r'\$([\d,]+)\s*-\s*\$([\d,]+)'
+    matches = re.search(pattern, description)
     if matches:
         min_salary = int(matches.group(1).replace(',', ''))
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return None
+        return ''
 
 
 # search_btn = driver.find_element(By.XPATH,"//button[.='Search!']")

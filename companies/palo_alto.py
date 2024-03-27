@@ -75,7 +75,7 @@ def extract_salary_range(text):
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return None
+        return '', ''
 
 def get_filtered_links(driver):
 
@@ -147,7 +147,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 
@@ -177,6 +177,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    
     extract_inner(links_data)
     driver.close()
 

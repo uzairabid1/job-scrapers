@@ -65,18 +65,25 @@ time.sleep(4)
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
+    keywords = ["sr director","head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
-         
-    links_xp = driver.find_elements(By.XPATH, "//div[@class='jobTitle']/a")
-    for link in links_xp:
-        href = link.get_attribute('href').lower()
-        if any(keyword in href for keyword in keywords):
-                data = {
-                    "Job_Title": link.text.strip(),
-                    "Job_Link": link.get_attribute('href')
-                }
-                filtered_links.append(data)
+    while True:     
+        links_xp = driver.find_elements(By.XPATH, "//div[@class='jobTitle']/a")
+        for link in links_xp:
+            href = link.get_attribute('href').lower()
+            if any(keyword in href for keyword in keywords):
+                    data = {
+                        "Job_Title": link.text.strip(),
+                        "Job_Link": link.get_attribute('href')
+                    }
+                    filtered_links.append(data)
+        try:
+            next_button = driver.find_element(By.XPATH, "//a[.='>']")
+            next_button.click()
+            time.sleep(2)
+        except:
+            print("loo")
+            break
 
     return filtered_links
 
@@ -161,6 +168,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

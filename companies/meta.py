@@ -73,7 +73,7 @@ time.sleep(4)
 def get_filtered_links(driver):
 
     
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
+    keywords = [" director - ","head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
     filtered_links = []
 
     while True:
@@ -158,6 +158,7 @@ def extract_inner(links_data):
             }
         if not is_link_duplicate('Shaleen-Sheet', job_link):
             appendProduct('Shaleen-Sheet', data)
+            # print(data)
         driver.close()
         time.sleep(1)
         driver.switch_to.window(driver.window_handles[0])

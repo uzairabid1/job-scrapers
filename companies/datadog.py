@@ -85,6 +85,7 @@ def get_filtered_links(driver):
     filtered_links = []
 
     links_xp = driver.find_elements(By.CSS_SELECTOR, "button.job-card>a")
+    print(len(links_xp))
     titles_xp = driver.find_elements(By.CSS_SELECTOR,"h3.job-title")
 
     for link,title in zip(links_xp,titles_xp):

@@ -77,7 +77,7 @@ driver.get("https://careers.adobe.com/us/en/search-results?qcountry=United%20Sta
 time.sleep(4)
 
 def get_filtered_links(driver):
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
+    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director","sr director","dir"]
     filtered_links = set()  
 
     while True:

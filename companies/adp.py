@@ -77,7 +77,7 @@ def extract_salary_range(text):
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return ''
+        return '',''
 
 
 def get_filtered_links(driver):
@@ -87,6 +87,7 @@ def get_filtered_links(driver):
 
     while True:            
         links_xp = driver.find_elements(By.XPATH, "//div[@class='jobTitle']/a")
+        print(len(links_xp))
         team_department_xp = driver.find_elements(By.XPATH,"//div[@class='jobCategory']")
         locations_xp = driver.find_elements(By.XPATH,"//li[@title='Location']")
         posted_date_xp = driver.find_elements(By.XPATH,"//li[@title='Posted Date']")
@@ -188,6 +189,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

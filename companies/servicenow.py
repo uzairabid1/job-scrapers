@@ -15,6 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import TimeoutException
 from datetime import datetime, timedelta
+from selenium.webdriver.support.ui import Select
 import os
 import pandas as pd
 import time
@@ -27,7 +28,7 @@ options = webdriver.ChromeOptions()
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument("--no-sandbox")
 options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-# options.add_argument("--headless=new")
+options.add_argument("--headless=new")
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
 
@@ -60,8 +61,13 @@ def appendProduct(sheet_name, data):
         return False
 
 driver.get("https://careers.servicenow.com/careers/jobs?location=United%20States&stretch=10&stretchUnit=MILES&page=1")
+dropdown = driver.find_element(By.XPATH,"//mat-select[@aria-autocomplete='none']")
+driver.execute_script("arguments[0].click();", dropdown)
+time.sleep(3)
+option_xpath = driver.find_element(By.XPATH,"//mat-option[contains(., '100')]")
+driver.execute_script("arguments[0].click();",option_xpath)
 
-time.sleep(2)
+time.sleep(10)
 
 accept_btn = driver.find_element(By.CSS_SELECTOR,"button#truste-consent-button")
 accept_btn.click()
@@ -144,7 +150,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 

@@ -71,23 +71,24 @@ def extract_salary_range(text):
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return ''
+        return '',''
 
 
 def get_filtered_links(driver):
-
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
 
     while True:            
         links_xp = driver.find_elements(By.XPATH, "//a[@class='table--advanced-search__title']")
+        print(len(links_xp))
         team_department_xp = driver.find_elements(By.XPATH,"//span[@class='table--advanced-search__role']")
         date_posted_xp = driver.find_elements(By.XPATH,"//span[@class='table--advanced-search__date']")
-        for link,team_department,date in zip(links_xp,team_department_xp,date_posted_xp):
-            href = link.text.strip().lower()
+        for link, team_department, date in zip(links_xp, team_department_xp, date_posted_xp):
+            job_title = link.text.strip().lower()
+            print(job_title)
             team_department = team_department.text.strip()
             date = date.text.strip()
-            if any(keyword in href for keyword in keywords):
+            if any(re.search(r'\b{}\b'.format(re.escape(keyword)), job_title) for keyword in keywords):
                 data = {
                     "Job_Title": link.text.strip(),
                     "Job_Link": link.get_attribute('href'),
@@ -181,6 +182,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

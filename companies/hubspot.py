@@ -80,6 +80,7 @@ def get_filtered_links(driver):
     filtered_links = []
 
     links_xp = driver.find_elements(By.XPATH, "//li/a[@class='sc-EHOje iHOrDr cta--primary cta--small careers-apply']")
+    print(len(links_xp))
     for link in links_xp:
         href = link.get_attribute('aria-label').lower()
         if any(keyword in href for keyword in keywords):

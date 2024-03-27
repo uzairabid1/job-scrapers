@@ -61,7 +61,7 @@ def appendProduct(sheet_name, data):
 
 driver.get("https://www.databricks.com/company/careers/open-positions?department=all&location=United%20States")
 
-time.sleep(8)
+time.sleep(10)
 
 def get_filtered_links(driver):
 
@@ -129,6 +129,7 @@ def extract_inner(links_data):
             }
 
             appendProduct('Shaleen-Sheet', data)
+            print(data)
 
 
 def is_link_duplicate(sheet_name, job_link):

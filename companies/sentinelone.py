@@ -70,6 +70,7 @@ def get_filtered_links(driver):
 
     links_xp = driver.find_elements(By.XPATH, "//div[@class='job']/div[@class='apply']/a")
     titles_xp = driver.find_elements(By.XPATH,"//div[@class='job']/h3")
+    print(len(links_xp))
 
     for link,title in zip(links_xp,titles_xp):
         href = title.text.lower()
@@ -128,7 +129,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 

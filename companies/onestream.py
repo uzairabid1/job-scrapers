@@ -79,13 +79,15 @@ def get_filtered_links(driver):
     filtered_links = []
 
     links_xp = driver.find_elements(By.XPATH, "//a[@data-automation='job-title']")
+    print(len(links_xp))
 
     for link in links_xp:
-        href = link.get_attribute('href').lower()
-        if any(keyword in href for keyword in keywords):
+        href = link.get_attribute('href')
+        job_title = link.text.strip().lower()
+        if any(keyword in  job_title.lower()for keyword in keywords):
             data = {
-                "Job_Title": link.text.strip(),
-                "Job_Link": link.get_attribute('href')
+                "Job_Title": job_title,
+                "Job_Link": href
             }
             filtered_links.append(data)
     return filtered_links
@@ -137,7 +139,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 
@@ -168,6 +170,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

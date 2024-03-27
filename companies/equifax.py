@@ -76,7 +76,7 @@ def extract_salary_range(text):
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
+    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director","sr director"]
     filtered_links = []
 
     while True:            
@@ -92,6 +92,7 @@ def get_filtered_links(driver):
         try:
             next_button = driver.find_element(By.XPATH,"//a[@aria-label='Go to next page of results']").get_attribute('href')
             driver.get(next_button)
+            
         except:
             print('looo')
             break

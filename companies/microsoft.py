@@ -73,12 +73,15 @@ def extract_salary_range(text):
         return ''
 
 driver.get("https://jobs.careers.microsoft.com/global/en/search?l=en_us&pg=1&pgSz=20&o=Relevance&flt=true")
-
+time.sleep(10)
+searchbox= driver.find_element(By.XPATH,"//input[@id='location-box11']")
+searchbox.send_keys("United States")
+time.sleep(2)
+searchbox.send_keys(Keys.ENTER)
 time.sleep(6)
 
 def get_filtered_links(driver):
 
-    
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
 
     while True:
@@ -103,11 +106,15 @@ def get_filtered_links(driver):
                 filtered_links.append(data)
         
         extract_inner(filtered_links)
+        time.sleep(5)
         try:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             next_button = driver.find_element(By.XPATH,"//button[@aria-label='Go to next page']")
             next_button.click()
-            time.sleep(4)
-        except:
+            time.sleep(5)
+        
+        except NoSuchElementException:
+            print("No more next pages found")
             break
 
     return filtered_links
@@ -119,52 +126,62 @@ def extract_inner(links_data):
         found_on = now.strftime("%d/%m/%Y-%H:%M:%S")
 
         job_button = link_data['Job_Link']
-        # driver.get(job_link)
-        job_button.click()
-        time.sleep(2)
+        try:
+            # driver.get(job_link)
+            if job_button.is_enabled():
+                job_button.click()
+                time.sleep(2)
+            else:
+                print("Job link not clickable")
+                continue
 
-        job_link = driver.current_url
-        company_name = 'Microsoft'
-        try:
-                job_title = link_data['Job_Title']
-        except:
-                job_title = ''
-        try:
-                location = link_data['Location']
-        except:
-                location = ''
-        try:
-                salary_range = driver.find_element(By.XPATH,"//h3[.='Qualifications']/following-sibling::div").text.strip()
-                salary_range = extract_salary_range(salary_range)
-        except:
-                salary_range = ''
-        try:
-                description = driver.find_element(By.XPATH,"//h3[.='Overview']/following-sibling::div").text.strip()          
-        except:
-                description = ''
-        try:
-                team_department = driver.find_element(By.XPATH,"//div[.='Discipline']/following-sibling::div").text.strip()
-        except:
-                team_department = ''
-        try:
-                date_posted = driver.find_element(By.XPATH,"//div[.='Date posted']/following-sibling::div").text.replace('Posted Date','').replace('" "','').strip()
-        except:
-                date_posted = ''
+            job_link = driver.current_url
+            company_name = 'Microsoft'
+            try:
+                    job_title = link_data['Job_Title']
+            except:
+                    job_title = ''
+            try:
+                    location = link_data['Location']
+            except:
+                    location = ''
+            try:
+                    salary_range = driver.find_element(By.XPATH,"//h3[.='Qualifications']/following-sibling::div").text.strip()
+                    salary_range = extract_salary_range(salary_range)
+            except:
+                    salary_range = ''
+            try:
+                    description = driver.find_element(By.XPATH,"//h3[.='Overview']/following-sibling::div").text.strip()          
+            except:
+                    description = ''
+            try:
+                    team_department = driver.find_element(By.XPATH,"//div[.='Discipline']/following-sibling::div").text.strip()
+            except:
+                    team_department = ''
+            try:
+                    date_posted = driver.find_element(By.XPATH,"//div[.='Date posted']/following-sibling::div").text.replace('Posted Date','').replace('" "','').strip()
+            except:
+                    date_posted = ''
 
-        data = {
-                "Company Name": company_name,
-                "Job Title": job_title,
-                "Job Link": job_link,
-                "Date Posted": date_posted,
-                "Found On": found_on,
-                "Description": description,
-                "Salary Range": salary_range,
-                "Location": location,
-                "Team/Department": team_department
-            }
-        if not is_link_duplicate('Shaleen-Sheet', job_link):
-            print(data)
-            appendProduct('Shaleen-Sheet', data)
+            data = {
+                    "Company Name": company_name,
+                    "Job Title": job_title,
+                    "Job Link": job_link,
+                    "Date Posted": date_posted,
+                    "Found On": found_on,
+                    "Description": description,
+                    "Salary Range": salary_range,
+                    "Location": location,
+                    "Team/Department": team_department
+                }
+            if not is_link_duplicate('Shaleen-Sheet', job_link):
+                print(data)
+                appendProduct('Shaleen-Sheet', data)
+                driver.back()
+                time.sleep(3)
+        except Exception as e:
+            print(f"An error occurred while extracting job details: {str(e)}")
+            continue
 
 
 def is_link_duplicate(sheet_name, job_link):
@@ -193,7 +210,8 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     # extract_inner(links_data)
-    driver.close()
+    # driver.close()
 
 main()

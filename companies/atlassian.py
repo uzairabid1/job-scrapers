@@ -83,7 +83,7 @@ time.sleep(4)
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
+    keywords = ["director,","head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
 
     while True:            

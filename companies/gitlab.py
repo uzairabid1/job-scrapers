@@ -141,7 +141,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data) 
             appendProduct('Shaleen-Sheet', data)
 
 

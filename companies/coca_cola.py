@@ -58,6 +58,16 @@ def appendProduct(sheet_name, data):
     except Exception as e:
         print(f"An error occurred while appending data to the Google Sheets document: {str(e)}")
         return False
+def extract_salary_range(text):
+    pattern = r'\$([\d,]+) to \$([\d,]+)'
+    matches = re.search(pattern, text)
+    if matches:
+        min_salary = int(matches.group(1).replace(',', ''))
+        max_salary = int(matches.group(2).replace(',', ''))
+        return min_salary, max_salary
+    else:
+        return None
+   
 
 driver.get("https://careers.coca-colacompany.com/job-search-results/?store_id=United%20States")
 

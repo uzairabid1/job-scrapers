@@ -59,7 +59,7 @@ def appendProduct(sheet_name, data):
         print(f"An error occurred while appending data to the Google Sheets document: {str(e)}")
         return False
 
-driver.get("https://workday.wd5.myworkdayjobs.com/Workday?q=United%20States")
+driver.get("https://workday.wd5.myworkdayjobs.com/Workday?Location_Country=bc33aa3152ec42d4995f4791a106ed09")
 
 time.sleep(4)
 
@@ -71,7 +71,7 @@ def extract_salary_range(text):
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return None
+        return '',''
 
 
 # search_btn = driver.find_element(By.XPATH,"//button[.='Search!']")
@@ -96,6 +96,7 @@ def get_filtered_links(driver):
             next_button = driver.find_element(By.XPATH,"//button[@aria-label='next']")
             next_button.click()
         except:
+            print("meow")
             break
         time.sleep(2)
 

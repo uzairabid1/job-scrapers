@@ -84,7 +84,7 @@ def extract_salary_range(text):
         max_salary = int(matches.group(2).replace(',', ''))
         return min_salary, max_salary
     else:
-        return None
+        return '',''
 
 
 def get_filtered_links(driver):
@@ -94,6 +94,7 @@ def get_filtered_links(driver):
 
     while True:            
         links_xp = driver.find_elements(By.XPATH, "//a[@ph-tevent='job_click']")
+        print(len(links_xp))
         for link in links_xp:
             href = link.get_attribute('href').lower()  
             title = link.get_attribute('data-ph-at-job-title-text') 

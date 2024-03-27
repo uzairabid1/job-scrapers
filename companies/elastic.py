@@ -65,7 +65,7 @@ time.sleep(2)
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director"]
+    keywords = ["sr director","head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director"]
     filtered_links = []
 
     links_xp = driver.find_elements(By.XPATH, "//tr/td[1]/a")
@@ -130,7 +130,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 

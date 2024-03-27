@@ -15,6 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import TimeoutException
 from datetime import datetime
+from selenium.webdriver.support.ui import Select
 import os
 import pandas as pd
 import time
@@ -24,6 +25,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 options = webdriver.ChromeOptions() 
+# options.add_argument("--disable-gpu")
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument("--no-sandbox")
 options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
@@ -62,6 +64,13 @@ def appendProduct(sheet_name, data):
 driver.get("https://www.okta.com/company/careers/#careers-job-postings?department=All&location=2626")
 
 time.sleep(2)
+
+dropdown = driver.find_element(By.XPATH,"//select[@data-drupal-selector='edit-location']")
+driver.execute_script("arguments[0].style.display = 'block';", dropdown)
+
+select = Select(dropdown)
+select.select_by_index(10)
+time.sleep(6)
 
 def get_filtered_links(driver):
 
@@ -127,7 +136,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 

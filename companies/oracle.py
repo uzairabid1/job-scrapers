@@ -76,11 +76,12 @@ def extract_salary_range(text):
 
 def get_filtered_links(driver):
 
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
+    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director","sr director"]
     filtered_links = []
 
     while True:            
         links_xp = driver.find_elements(By.XPATH, "//a[@class='job-grid-item__link']")
+        print(len(links_xp))
         titles_xp = driver.find_elements(By.XPATH,"//div[@class='job-tile__header']/span")
         locations_xp = driver.find_elements(By.XPATH,"//div[@class='job-tile__subheader']/span/span")
         for link,title,location in zip(links_xp,titles_xp,locations_xp):
@@ -97,9 +98,10 @@ def get_filtered_links(driver):
             next_button = driver.find_element(By.XPATH,"//span[.='Show More Results']/parent::button")
             next_button.click()
         except:
+            print("links done")
             break
         time.sleep(2)
-
+    
     return filtered_links
 
 
@@ -180,6 +182,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

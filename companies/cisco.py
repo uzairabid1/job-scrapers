@@ -59,26 +59,43 @@ def appendProduct(sheet_name, data):
         print(f"An error occurred while appending data to the Google Sheets document: {str(e)}")
         return False
 
+def extract_salary_range(text):
+    pattern = r'\$([\d,]+) to \$([\d,]+)'
+    matches = re.search(pattern, text)
+    if matches:
+        min_salary = int(matches.group(1).replace(',', ''))
+        max_salary = int(matches.group(2).replace(',', ''))
+        return min_salary, max_salary
+    else:
+        return ''
+    
+
 driver.get("https://jobs.cisco.com/jobs/SearchJobs/?21178=%5B169482%5D&21178_format=6020&listFilterMode=1")
 
-time.sleep(2)
+time.sleep(6)
 
 def get_filtered_links(driver):
 
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director"]
-    filtered_links = []
-
-    links_xp = driver.find_elements(By.XPATH, "//tr/td[1]/a")
-
-    for link in links_xp:
-        href = link.get_attribute('href').lower()
-        if any(keyword in href for keyword in keywords):
-            data = {
-                "Job_Title": link.text.strip(),
-                "Job_Link": link.get_attribute('href')
-            }
-            filtered_links.append(data)
-    return filtered_links
+    filtered_links = set()
+    while True:
+        links_xp = driver.find_elements(By.XPATH, "//tr/td[1]/a")
+        print(len(links_xp))
+        for link in links_xp:
+            href = link.get_attribute('href').lower()
+            if any(keyword in href for keyword in keywords):
+                data = {
+                    "Job_Title": link.text.strip(),
+                    "Job_Link": link.get_attribute('href')
+                }
+                filtered_links.add((data["Job_Title"],data["Job_Link"]))
+        try:
+            next_button = driver.find_element(By.XPATH, "//div[@class='pagination_bottom']/div/a[.='Next >>']")
+            next_button.click()
+            time.sleep(3)
+        except:
+            break
+    return [{"Job_Title": title, "Job_Link": link} for title, link in filtered_links]
 
 
 def extract_inner(links_data):
@@ -100,6 +117,7 @@ def extract_inner(links_data):
                 location = ''
             try:
                 salary_range = driver.find_element(By.XPATH,"//div[.='Compensation Range']/following-sibling::div").text.strip()
+                salary_range = extract_salary_range(salary_range)
             except:
                 salary_range = ''
             try:
@@ -126,7 +144,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 
@@ -157,6 +175,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 

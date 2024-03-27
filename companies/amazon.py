@@ -27,7 +27,7 @@ options = webdriver.ChromeOptions()
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument("--no-sandbox")
 options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
-# options.add_argument("--headless=new")
+options.add_argument("--headless=new")
 
 driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),options=options)
 
@@ -81,6 +81,7 @@ def get_filtered_links(driver):
 
     while True:            
         links_xp = driver.find_elements(By.XPATH, "//h3/a")
+        print(len(links_xp))
         date_posted = driver.find_elements(By.XPATH,"//h2[@class='posting-date']")
         for link,date in zip(links_xp,date_posted):
             href = link.text.lower()

@@ -64,27 +64,28 @@ driver.get("https://careers.salesforce.com/en/jobs/?search=&country=United+State
 time.sleep(4)
 
 def get_filtered_links(driver):
-
-    
-    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director"]
+    keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior-director", "sr. director", "sr-director", "vice president"]
     filtered_links = []
 
     while True:
         links_xp = driver.find_elements(By.XPATH, "//h3[@class='card-title']/a")
         for link in links_xp:
             href = link.get_attribute('href').lower()
-            print(href)
+            
             if any(keyword in href for keyword in keywords):
                 data = {
                     "Job_Title": link.text.strip(),
                     "Job_Link": link.get_attribute('href')
                 }
                 filtered_links.append(data)
+
         try:
-            next_button = driver.find_element(By.XPATH,"//a[@rel='next']")
-            next_button.click()
-            time.sleep(2)
-        except:
+            next_page_link = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//a[@aria-label='Next page'][contains(@rel,'next nofollow')]")))
+            next_page_url = next_page_link.get_attribute('href')
+            driver.get(next_page_url)
+            time.sleep(6)
+        except Exception as e:
+            print("meow")
             break
 
     return filtered_links
@@ -137,7 +138,7 @@ def extract_inner(links_data):
                 "Location": location,
                 "Team/Department": team_department
             }
-
+            print(data)
             appendProduct('Shaleen-Sheet', data)
 
 
