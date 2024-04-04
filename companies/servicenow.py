@@ -74,12 +74,10 @@ accept_btn.click()
 time.sleep(1)
 
 def get_filtered_links(driver):
-
     keywords = ["head", "chief", "president", "vice-president", "vp", "director", "senior director", "sr. Director","senior-director","sr-director"]
     filtered_links = []
 
-    pg_idx = 2
-    while pg_idx <= 48:            
+    while True:            
         links_xp = driver.find_elements(By.XPATH, "//p[@class='job-title']/a")
         for link in links_xp:
             href = link.get_attribute('aria-label').lower()
@@ -89,12 +87,17 @@ def get_filtered_links(driver):
                     "Job_Link": link.get_attribute('href')
                 }
                 filtered_links.append(data)
+                
         try:
-            driver.get(f"https://careers.servicenow.com/careers/jobs?location=United%20States&stretch=10&stretchUnit=MILES&page={pg_idx}")
-            pg_idx+=1
-            time.sleep(2)
-        except:
-            print('meow')
+            next_btn = driver.find_element(By.XPATH,"//button[@aria-label='Next Page of Job Search Results']")
+            if "mat-button-disabled" in next_btn.get_attribute("class"):
+                print("Next button disabled. Ending pagination.")
+                break
+            else:
+                driver.execute_script("arguments[0].click();", next_btn)
+                time.sleep(6)
+        except Exception:
+            print("loooo")
             break
 
     return filtered_links
@@ -180,6 +183,7 @@ def is_link_duplicate(sheet_name, job_link):
 def main():
 
     links_data = get_filtered_links(driver)
+    print(links_data)
     extract_inner(links_data)
     driver.close()
 
